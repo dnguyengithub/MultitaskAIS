@@ -146,7 +146,8 @@ config.data_dim  = config.lat_bins + config.lon_bins\
 
 ### Other PCs  
 if config.dataset == "Brittany":
-    config.dataset_path = "/homes/vnguye04/Bureau/Sanssauvegarde/Datasets/mt314/"
+    #config.dataset_path = "/homes/vnguye04/Bureau/Sanssauvegarde/Datasets/mt314/"
+    config.dataset_path = "data/"
 elif config.dataset == "MarineC":
     config.dataset_path = "/homes/vnguye04/Bureau/Sanssauvegarde/Datasets/MarineC/"
 else:
