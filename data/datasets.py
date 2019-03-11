@@ -76,10 +76,6 @@ def create_AIS_dataset(dataset_path,
     with open(dirname + "/mean.pkl","rb") as f:
         mean = pickle.load(f, encoding = 'latin1')
         
-    print('####################################')
-    print(type(mean))
-    print(len(mean))
-    print('####################################')
 
     def aistrack_generator():
         for k in list(raw_data.keys()):
