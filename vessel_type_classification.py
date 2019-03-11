@@ -7,9 +7,9 @@ Created on Tue Apr 10 13:10:40 2018
 """
 
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
+
+
 
 import os
 import numpy as np
@@ -253,7 +253,7 @@ width = 12
 height = 12
 plt.figure(figsize=(width, height))
 
-indep_train_axis = np.array(range(BATCH_SIZE, (len(train_losses)+1)*BATCH_SIZE, BATCH_SIZE))
+indep_train_axis = np.array(list(range(BATCH_SIZE, (len(train_losses)+1)*BATCH_SIZE, BATCH_SIZE)))
 plt.plot(indep_train_axis, np.array(train_losses),     "b--", label="Train losses")
 plt.plot(indep_train_axis, np.array(train_accuracies), "g--", label="Train accuracies")
 

@@ -24,9 +24,9 @@ on the number of abnormal points in this segment and its length.
 """
 # ==============================================================================
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
+
+
 
 import os
 import numpy as np
@@ -75,7 +75,7 @@ with open("/homes/vnguye04/Bureau/Sanssauvegarde/Datasets/mt314/dataset8/"\
 Vs = Vs_train
 plt.figure(figsize=(960*2/FIG_DPI, 960*2/FIG_DPI), dpi=FIG_DPI)  
 cmap = plt.cm.get_cmap('Blues')
-l_keys = Vs.keys()
+l_keys = list(Vs.keys())
 N = len(Vs)
 for d_i in range(N):
     key = l_keys[d_i]
@@ -208,7 +208,7 @@ plt.close()
 
 
 Vs = Vs_train
-l_keys = Vs.keys()
+l_keys = list(Vs.keys())
 N = len(Vs)
 d_i_anomaly = 0
 cmap_anomaly = plt.cm.get_cmap('autumn')

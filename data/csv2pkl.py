@@ -6,9 +6,9 @@ Created on Thu Jan 25 18:50:45 2018
 @author: vnguye04
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
+
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,7 +41,7 @@ LON_RANGE = LON_MAX - LON_MIN
 SOG_MAX = 30.0  # knots
 
 EPOCH = datetime(1970, 1, 1)
-LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = range(9)
+LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = list(range(9))
 
 # DATA PATH 
 l_l_msg = [] # list of AIS messages, each row is a message (list of AIS attributes)
@@ -83,7 +83,7 @@ for month in range(1,2):
         with open(csv_filename, 'r') as f:
             print("Reading ", csv_filename, "...")
             csvReader = csv.reader(f)
-            csvReader.next() # skip the legend row
+            next(csvReader) # skip the legend row
             for row in csvReader :
                 lat = float(row[1])
                 lon = float(row[0])
@@ -113,18 +113,18 @@ m_msg = m_msg[m_msg[:,SOG]>=0]
 m_msg = m_msg[m_msg[:,COG]<=360]
 # TIME
 m_msg = m_msg[m_msg[:,TIMESTAMP]>=0]
-timestamp_max = (datetime(2017, 01, 31, 23, 59, 59) - EPOCH).total_seconds()
-timestamp_max = (datetime(2017, 03, 31, 23, 59, 59) - EPOCH).total_seconds()
+timestamp_max = (datetime(2017, 0o1, 31, 23, 59, 59) - EPOCH).total_seconds()
+timestamp_max = (datetime(2017, 0o3, 31, 23, 59, 59) - EPOCH).total_seconds()
 m_msg = m_msg[m_msg[:,TIMESTAMP]<=timestamp_max]
 
 print("Convert to dict of vessel's tracks...")
 Vs = dict()
 for v_msg in m_msg:
     mmsi = int(v_msg[MMSI])
-    if not (mmsi in Vs.keys()):
+    if not (mmsi in list(Vs.keys())):
         Vs[mmsi] = np.empty((0,9))
     Vs[mmsi] = np.concatenate((Vs[mmsi], np.expand_dims(v_msg,0)), axis = 0)
-for key in Vs.keys():
+for key in list(Vs.keys()):
     Vs[key] = np.array(sorted(Vs[key], key=lambda m_entry: m_entry[TIMESTAMP]))
     
 #for key in Vs.keys():
