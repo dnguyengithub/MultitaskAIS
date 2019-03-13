@@ -339,20 +339,20 @@ elif config.mode == "traj_reconstruction":
             plt.figure()
             plt.subplot(2,1,1)
             plt.plot(sparse_tar[:,1],sparse_tar[:,0],'bo')
-            plt.plot(sparse_tar[-18:,1],sparse_tar[-18:,0],'ro') # TODO make hold-out flexible
+            plt.plot(sparse_tar[-18:-6,1],sparse_tar[-18:-6,0],'ro') # TODO make hold-out flexible
             plt.plot(sparse_tar[0,1],sparse_tar[0,0],'go')
             plt.ylim([0,config.lat_bins])
             plt.xlim([config.lat_bins,config.lat_bins+config.lon_bins])
             # Zoom-in
             plt.subplot(2,1,2)
             plt.plot(sparse_tar[:,1],sparse_tar[:,0],'bo')
-            plt.plot(sparse_tar[-18:,1],sparse_tar[-18:,0],'ro') # TODO make hold-out flexible
+            plt.plot(sparse_tar[-18:-6,1],sparse_tar[-18:-6,0],'ro') # TODO make hold-out flexible
             plt.plot(sparse_tar[0,1],sparse_tar[0,0],'go')
             ## Reconstructed positions
             logit_lat = np.argmax(dense_sample[:,d_i_sample,0:config.lat_bins], axis = 1)
             logit_lon = np.argmax(dense_sample[:,d_i_sample,config.lat_bins:config.lat_bins+config.lon_bins], axis = 1) + config.lat_bins
             plt.plot(logit_lon[1:],logit_lat[1:],'b')
-            plt.plot(logit_lon[-17:],logit_lat[-17:],'r') # TODO make hold-out flexible
+            plt.plot(logit_lon[-17:-5],logit_lat[-17:-5],'r') # TODO make hold-out flexible
             plt.xlim([np.min(sparse_tar[:,1]) - 5, np.max(sparse_tar[:,1]) + 5])
             plt.ylim([np.min(sparse_tar[:,0]) - 5, np.max(sparse_tar[:,0]) + 5])
             
