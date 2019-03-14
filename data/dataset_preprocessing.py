@@ -1,16 +1,6 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
 """
-Created on Tue Mar 20 18:13:06 2018
-
-@author: vnguye04
-
 Preprocessing script for MultitaskAIS
 """
-
-
-
-
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -60,7 +50,7 @@ LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = list(range(9))
 #        dict_list.append(temp)
 
 ## MarineC
-data_path = "/users/local/dnguyen/Datasets/AIS_datasets/MarineC/2014/"
+data_path = "MarineC/2014/"
 dict_list = [] # List of data dictionary
 month = "01"
 zone_list = ['14','15','16']

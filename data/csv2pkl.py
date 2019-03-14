@@ -1,20 +1,9 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jan 25 18:50:45 2018
-
-@author: vnguye04
-"""
-
-
-
-
-
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 import sys
-import utils
+sys.path.append("..")
+# import utils
 import pickle
 import matplotlib.pyplot as plt
 import copy
@@ -25,10 +14,14 @@ from io import StringIO
 #import utm
 
 ## Gulf of Mexico
-LAT_MIN = 27
+# LAT_MIN = 27
+# LAT_MAX = 30.0
+# LON_MIN = -98
+# LON_MAX = -88
+LAT_MIN = 26.5
 LAT_MAX = 30.0
-LON_MIN = -98
-LON_MAX = -88
+LON_MIN = -97.5
+LON_MAX = -87
 
 ### Bretagne
 #LAT_MIN = 47.0
@@ -79,6 +72,9 @@ l_l_msg = [] # list of AIS messages, each row is a message (list of AIS attribut
 dataset_path = "MarineC/2014/" 
 for month in range(1,2):    
     for zone in [14,15,16]:
+        
+        l_l_msg = [] # list of AIS messages, each row is a message (list of AIS attributes)
+
         csv_filename = dataset_path + "{0:02d}/Zone{1:02d}_2014_{0:02d}.csv".format(month,zone) 
         with open(csv_filename, 'r') as f:
             print("Reading ", csv_filename, "...")
@@ -96,49 +92,51 @@ for month in range(1,2):
                              float(row[4]), int(row[5]), 
                              int(row[7]), 
                              int(timestamp), int(row[9])])
-m_msg = np.array(l_l_msg)        
+        
+        m_msg = np.array(l_l_msg)        
 
 
 
-## LAT LON
-m_msg = m_msg[m_msg[:,LAT]>=LAT_MIN]
-m_msg = m_msg[m_msg[:,LAT]<=LAT_MAX]
-m_msg = m_msg[m_msg[:,LON]>=LON_MIN]
-m_msg = m_msg[m_msg[:,LON]<=LON_MAX]
-# SOG
-m_msg = m_msg[m_msg[:,SOG]>=0]
-m_msg = m_msg[m_msg[:,SOG]<=SOG_MAX]
-# COG
-m_msg = m_msg[m_msg[:,SOG]>=0]
-m_msg = m_msg[m_msg[:,COG]<=360]
-# TIME
-m_msg = m_msg[m_msg[:,TIMESTAMP]>=0]
-timestamp_max = (datetime(2017, 0o1, 31, 23, 59, 59) - EPOCH).total_seconds()
-timestamp_max = (datetime(2017, 0o3, 31, 23, 59, 59) - EPOCH).total_seconds()
-m_msg = m_msg[m_msg[:,TIMESTAMP]<=timestamp_max]
+        ## LAT LON
+        m_msg = m_msg[m_msg[:,LAT]>=LAT_MIN]
+        m_msg = m_msg[m_msg[:,LAT]<=LAT_MAX]
+        m_msg = m_msg[m_msg[:,LON]>=LON_MIN]
+        m_msg = m_msg[m_msg[:,LON]<=LON_MAX]
+        # SOG
+        m_msg = m_msg[m_msg[:,SOG]>=0]
+        m_msg = m_msg[m_msg[:,SOG]<=SOG_MAX]
+        # COG
+        m_msg = m_msg[m_msg[:,SOG]>=0]
+        m_msg = m_msg[m_msg[:,COG]<=360]
+        # TIME
+        m_msg = m_msg[m_msg[:,TIMESTAMP]>=0]
+        timestamp_max = (datetime(2017, 0o1, 31, 23, 59, 59) - EPOCH).total_seconds()
+        timestamp_max = (datetime(2017, 0o3, 31, 23, 59, 59) - EPOCH).total_seconds()
+        m_msg = m_msg[m_msg[:,TIMESTAMP]<=timestamp_max]
 
-print("Convert to dict of vessel's tracks...")
-Vs = dict()
-for v_msg in m_msg:
-    mmsi = int(v_msg[MMSI])
-    if not (mmsi in list(Vs.keys())):
-        Vs[mmsi] = np.empty((0,9))
-    Vs[mmsi] = np.concatenate((Vs[mmsi], np.expand_dims(v_msg,0)), axis = 0)
-for key in list(Vs.keys()):
-    Vs[key] = np.array(sorted(Vs[key], key=lambda m_entry: m_entry[TIMESTAMP]))
-    
-#for key in Vs.keys():
-#    tmp = Vs[key]
-#    plt.plot(tmp[:,LON],tmp[:,LAT])
+        print("Convert to dict of vessel's tracks...")
+        Vs = dict()
+        for v_msg in m_msg:
+            mmsi = int(v_msg[MMSI])
+            if not (mmsi in list(Vs.keys())):
+                Vs[mmsi] = np.empty((0,9))
+            Vs[mmsi] = np.concatenate((Vs[mmsi], np.expand_dims(v_msg,0)), axis = 0)
+        for key in list(Vs.keys()):
+            Vs[key] = np.array(sorted(Vs[key], key=lambda m_entry: m_entry[TIMESTAMP]))
+            
+        #for key in Vs.keys():
+        #    tmp = Vs[key]
+        #    plt.plot(tmp[:,LON],tmp[:,LAT])
 
-print("Pickling...") 
-### Bretagne       
-#with open(os.path.join(dataset_path,"010203_position.pkl"),"wb") as f:
-#    pickle.dump(Vs,f)
+        print("Pickling...") 
+        pkl_filename = dataset_path + "{0:02d}/Zone{1:02d}_2014_{0:02d}.pkl".format(month,zone)
+        ### Bretagne       
+        #with open(os.path.join(dataset_path,"010203_position.pkl"),"wb") as f:
+        #    pickle.dump(Vs,f)
 
-### MarineC
-with open(os.path.join(dataset_path,"01_position.pkl"),"wb") as f:
-    pickle.dump(Vs,f)
+        ### MarineC
+        with open(pkl_filename,"wb") as f:
+            pickle.dump(Vs,f)
 
             
 #cmap = plt.cm.get_cmap('Blues')
