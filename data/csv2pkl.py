@@ -76,7 +76,7 @@ l_l_msg = [] # list of AIS messages, each row is a message (list of AIS attribut
 #np.count_nonzero(m_msg[:,SOG]>30)/float(len(m_msg))
     
 ## MarineC
-dataset_path = "/users/local/dnguyen/Datasets/AIS_datasets/MarineC/2014/" 
+dataset_path = "MarineC/2014/" 
 for month in range(1,2):    
     for zone in [14,15,16]:
         csv_filename = dataset_path + "{0:02d}/Zone{1:02d}_2014_{0:02d}.csv".format(month,zone) 

@@ -1,0 +1,21 @@
+#####################################
+# Gulf of Mexico - Data Preprocessing
+#####################################
+
+# Download the zip files from Marine Cadastre site
+#   IMPORTANT NOTE:  This does NOT support months 
+#   October, November, December, 
+#   because for j>=10 the static 0 needs to be removed
+
+for j in {1..3}; do for i in {14..16}; do wget https://coast.noaa.gov/htdata/CMSP/AISDataHandler/2014/0${j}/Zone${i}_2014_0${j}.zip ; done; done
+
+
+# unzip
+for j in {1..3}; do for i in {14..16}; do unzip Zone${i}_2014_0${j}.zip ; done; done
+
+# Install ogr2ogr (which is part of part of GDAL): 
+sudo apt install gdal-bin
+
+# create .csv from .qdb
+for j in {1..3}; do for i in {14..16}; do ogr2ogr -overwrite -progress -f csv "Zone${i}_2014_0${j}/" "Zone${i}_2014_0${j}.gdb" -lco GEOMETRY=AS_YX -select "SOG,COG,Heading,ROT,Status,BaseDateTime,MMSI"; done ; done
+
