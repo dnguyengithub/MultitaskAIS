@@ -148,7 +148,7 @@ if config.dataset == "Brittany":
     LON_MAX = -4.0
 
 elif config.dataset == "MarineC":
-    config.dataset_path = "data/MarineC/MarineC_Jan2014_Norm"
+    config.dataset_path = "data/MarineC/MarineC_Jan2014_Norm/"
     ## Gulf of Mexico
     LAT_MIN = 26.5
     LAT_MAX = 30.0
