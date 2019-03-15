@@ -17,7 +17,7 @@ import pickle
 import os
 import sys
 sys.path.append("./data/")
-dataset_path = "/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_norm/MarineC_Jan2014_norm_train.pkl"
+dataset_path = "MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_train.pkl"
 import tensorflow as tf
 
 #lat_bins = 300; lon_bins = 300; sog_bins = 30; cog_bins = 72
@@ -47,7 +47,8 @@ dirname = os.path.dirname(dataset_path)
 
 LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = list(range(9))
 
-with tf.gfile.Open(dataset_path, "r") as f:
+
+with tf.gfile.Open(dataset_path, "rb") as f:
     Vs = pickle.load(f)
 
 

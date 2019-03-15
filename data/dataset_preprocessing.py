@@ -1,16 +1,6 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
 """
-Created on Tue Mar 20 18:13:06 2018
-
-@author: vnguye04
-
 Preprocessing script for MultitaskAIS
 """
-
-
-
-
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,8 +15,8 @@ import copy
 from datetime import datetime
 import time
 from io import StringIO
-from pyproj import Geod
-geod = Geod(ellps='WGS84')
+# from pyproj import Geod
+# geod = Geod(ellps='WGS84')
 #import utm
 
 ## Gulf of Mexico
@@ -60,10 +50,10 @@ LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = list(range(9))
 #        dict_list.append(temp)
 
 ## MarineC
-data_path = "/users/local/dnguyen/Datasets/AIS_datasets/MarineC/2014/"
+data_path = "MarineC/2014/"
 dict_list = [] # List of data dictionary
 month = "01"
-zone_list = ['14','15','16']
+zone_list = ['14','15','16'] # TODO correct
 filename_list = []
 for zone in zone_list:
     filename = data_path + month + "/Zone" + zone + "_2014_" + month + ".pkl"
@@ -241,13 +231,16 @@ for k in list(Data.keys()):
     v[:,SOG] = v[:,SOG]/SPEED_MAX
     v[:,COG] = v[:,COG]/360.0
 
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014/MarineC_Jan2014.pkl","wb") as f:
+dump_path = "MarineC/MarineC_Jan2014/"
+if not os.path.exists(dump_path):
+    os.makedirs(dump_path)
+with open(dump_path+"MarineC_Jan2014.pkl","wb") as f:
     pickle.dump(Data,f)
 
     
 ## Step 7bis: Density normalisation
 ##############################################################################
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014/MarineC_Jan2014.pkl","rb") as f:
+with open(dump_path + "MarineC_Jan2014.pkl","rb") as f:
     Vs = pickle.load(f)
 
 Tiles = dict()
@@ -300,9 +293,14 @@ for d_i in v_all_idx[int(len(Vs)*0.9):]:
     key = l_keys[d_i]
     Vs_test[key] = Vs[key]
     
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_train.pkl","wb") as f:
+
+dump_path_norm = "MarineC/MarineC_Jan2014_Norm/"
+if not os.path.exists(dump_path_norm):
+    os.makedirs(dump_path_norm)
+
+with open(dump_path_norm+"MarineC_Jan2014_Norm_train.pkl","wb") as f:
     pickle.dump(Vs_train,f)
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_valid.pkl","wb") as f:
+with open(dump_path_norm+"MarineC_Jan2014_Norm_valid.pkl","wb") as f:
     pickle.dump(Vs_valid,f)
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_test.pkl","wb") as f:
+with open(dump_path_norm+"MarineC_Jan2014_Norm_test.pkl","wb") as f:
     pickle.dump(Vs_test,f)
