@@ -47,7 +47,7 @@ dirname = os.path.dirname(dataset_path)
 
 LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = list(range(9))
 
-# with open(dataset_path, "r")
+
 with tf.gfile.Open(dataset_path, "rb") as f:
     Vs = pickle.load(f)
 
