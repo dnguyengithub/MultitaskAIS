@@ -231,13 +231,13 @@ for k in list(Data.keys()):
     v[:,SOG] = v[:,SOG]/SPEED_MAX
     v[:,COG] = v[:,COG]/360.0
 
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014/MarineC_Jan2014.pkl","wb") as f:
+with open("MarineC/MarineC_Jan2014/MarineC_Jan2014.pkl","wb") as f:
     pickle.dump(Data,f)
 
     
 ## Step 7bis: Density normalisation
 ##############################################################################
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014/MarineC_Jan2014.pkl","rb") as f:
+with open("MarineC/MarineC_Jan2014/MarineC_Jan2014.pkl","rb") as f:
     Vs = pickle.load(f)
 
 Tiles = dict()
@@ -290,9 +290,9 @@ for d_i in v_all_idx[int(len(Vs)*0.9):]:
     key = l_keys[d_i]
     Vs_test[key] = Vs[key]
     
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_train.pkl","wb") as f:
+with open("MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_train.pkl","wb") as f:
     pickle.dump(Vs_train,f)
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_valid.pkl","wb") as f:
+with open("MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_valid.pkl","wb") as f:
     pickle.dump(Vs_valid,f)
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_test.pkl","wb") as f:
+with open("MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_test.pkl","wb") as f:
     pickle.dump(Vs_test,f)
