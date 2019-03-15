@@ -53,7 +53,7 @@ LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = list(range(9))
 data_path = "MarineC/2014/"
 dict_list = [] # List of data dictionary
 month = "01"
-zone_list = ['14'] # TODO correct
+zone_list = ['14','15','16'] # TODO correct
 filename_list = []
 for zone in zone_list:
     filename = data_path + month + "/Zone" + zone + "_2014_" + month + ".pkl"
