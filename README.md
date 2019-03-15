@@ -77,7 +77,9 @@ python multitaskAIS.py \
   --learning_rate=0.0003 \
   --dataset="MarineC" \
   --trainingset_name=MarineC_Jan2014_Norm_train.pkl \
-  --testset_name=MarineC_Jan2014_Norm_valid.pkl
+  --testset_name=MarineC_Jan2014_Norm_valid.pkl \
+  --lat_bins=350 \
+  --lon_bins=1050
 ```
 ### Running task-specific submodels
 
