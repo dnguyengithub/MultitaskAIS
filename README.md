@@ -132,7 +132,22 @@ python multitaskAIS.py \
   --batch_size=1 \
   --num_samples=16 \
 ``` 
-
+MarineC dataset:
+```
+python multitaskAIS.py \
+  --mode=traj_reconstruction \
+  --logdir=./chkpt \
+  --bound=elbo \
+  --latent_size=400 \
+  --batch_size=1 \
+  --num_samples=16 \
+  --learning_rate=0.0003 \
+  --dataset="MarineC" \
+  --trainingset_name=MarineC_Jan2014_Norm_train.pkl \
+  --testset_name=MarineC_Jan2014_Norm_test.pkl \
+  --lat_bins=350 \
+  --lon_bins=1050
+```
 
 ### Acknowledgement
 
