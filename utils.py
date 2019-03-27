@@ -189,8 +189,8 @@ def interpolate(t, track):
                                                az, dist_interp)
             speed_interp = (track[apos,SOG] - track[bpos,SOG])*(dt_interp/dt_full) + track[bpos,SOG]
             
-            course_interp = (( ((track[apos,COG] - track[bpos,COG])+180) % 360 - 180 )*(dt_interp/dt_full) + track[bpos,COG] ) % 360
-            heading_interp = (( ((track[apos,HEADING] - track[bpos,HEADING])+180) % 360 - 180 )*(dt_interp/dt_full) + track[bpos,HEADING] ) % 360
+            course_interp = (( ((track[apos,COG] - track[bpos,COG])+180) % 360 - 180 )*(dt_interp/dt_full) + track[bpos,COG] + 360) % 360
+            heading_interp = (( ((track[apos,HEADING] - track[bpos,HEADING])+180) % 360 - 180 )*(dt_interp/dt_full) + track[bpos,HEADING] + 360) % 360
             
             rot_interp = (track[apos,ROT] - track[bpos,ROT])*(dt_interp/dt_full) + track[bpos,ROT]
             if dt_interp > (dt_full/2):
