@@ -1,16 +1,6 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
 """
-Created on Tue Mar 20 18:13:06 2018
-
-@author: vnguye04
-
 Preprocessing script for MultitaskAIS
 """
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,8 +15,8 @@ import copy
 from datetime import datetime
 import time
 from io import StringIO
-from pyproj import Geod
-geod = Geod(ellps='WGS84')
+# from pyproj import Geod
+# geod = Geod(ellps='WGS84')
 #import utm
 
 ## Gulf of Mexico
@@ -47,7 +37,7 @@ LON_RANGE = LON_MAX - LON_MIN
 SPEED_MAX = 30.0  # knots
 
 EPOCH = datetime(1970, 1, 1)
-LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = range(9)
+LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = list(range(9))
 
 # DATA PATH
 #### Bretagne
@@ -60,10 +50,10 @@ LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = range(9)
 #        dict_list.append(temp)
 
 ## MarineC
-data_path = "/users/local/dnguyen/Datasets/AIS_datasets/MarineC/2014/"
+data_path = "MarineC/2014/"
 dict_list = [] # List of data dictionary
 month = "01"
-zone_list = ['14','15','16']
+zone_list = ['14','15','16'] # TODO correct
 filename_list = []
 for zone in zone_list:
     filename = data_path + month + "/Zone" + zone + "_2014_" + month + ".pkl"
@@ -93,7 +83,7 @@ t_max = time.mktime(time.strptime("31/01/2014 23:59:59", "%d/%m/%Y %H:%M:%S"))
 Vs = dict()
 for Vi,filename in zip(dict_list, filename_list):
     print(filename)
-    for mmsi in Vi.keys():
+    for mmsi in list(Vi.keys()):
         # Boundary
         lat_idx = np.logical_or((Vi[mmsi][:,LAT] > LAT_MAX),
                                 (Vi[mmsi][:,LAT] < LAT_MIN))
@@ -112,7 +102,7 @@ for Vi,filename in zip(dict_list, filename_list):
         if len(Vi[mmsi]) == 0:
             del Vi[mmsi]
             continue
-        if mmsi not in Vs.keys():
+        if mmsi not in list(Vs.keys()):
             Vs[mmsi] = Vi[mmsi]
             del Vi[mmsi]
         else:
@@ -127,7 +117,7 @@ print("Cutting discontinuous voyages into smaller voyages...")
 count = 0
 voyages = dict()
 INTERVAL_MAX = 2*3600 # 2h
-for mmsi in Vs.keys():
+for mmsi in list(Vs.keys()):
     v = Vs[mmsi]
     # Intervals between successive messages in a track
     intervals = v[1:,TIMESTAMP] - v[:-1,TIMESTAMP]
@@ -145,7 +135,7 @@ for mmsi in Vs.keys():
 # STEP 3: Removing AIS track whose length is smaller than 20 or who lasts less than 4h
 ###############################################################################
 print("Removing AIS track whose length is smaller than 20 or who lasts less than 4h...")
-for mmsi in voyages.keys():
+for mmsi in list(voyages.keys()):
     duration = voyages[mmsi][-1,TIMESTAMP] - voyages[mmsi][0,TIMESTAMP]
     if (len(voyages[mmsi]) < 20) or (duration < 4*3600):
         voyages.pop(mmsi, None)
@@ -155,7 +145,7 @@ for mmsi in voyages.keys():
 print("Removing anomalous message...")
 error_count = 0
 tick = time.time()
-for mmsi in voyages.keys(): 
+for mmsi in list(voyages.keys()): 
     print(mmsi,'...')
     track = voyages[mmsi][:,[TIMESTAMP,LAT,LON,SOG]] # [Timestamp, Lat, Lon, Speed]
     try:
@@ -174,7 +164,7 @@ print("STEP 4: duration = ",(tok - tick)/60) # 139.685766101 mins
 ## STEP 5: Removing 'moored' or 'ar anchor' tracks
 ###############################################################################
 print("Removing 'moored' or 'ar anchor' tracks...")
-for mmsi in voyages.keys():
+for mmsi in list(voyages.keys()):
     d_L = float(len(voyages[mmsi]))
     
     if np.count_nonzero(voyages[mmsi][:,NAV_STT] == 1)/d_L > 0.7\
@@ -192,7 +182,7 @@ tick = time.time()
 print('Sampling...')
 Vs = dict()
 count = 0
-for k in voyages.keys():
+for k in list(voyages.keys()):
     v = voyages[k]
     print(count)
     sampling_track = np.empty((0, 9))
@@ -209,7 +199,7 @@ for k in voyages.keys():
 tok = time.time()
 
 print("Removing 'low speed' tracks") 
-for mmsi in Vs.keys():
+for mmsi in list(Vs.keys()):
     d_L = float(len(Vs[mmsi]))    
     if np.count_nonzero(Vs[mmsi][:,SOG] < 2)/d_L > 0.8:
         Vs.pop(mmsi,None)
@@ -219,7 +209,7 @@ for mmsi in Vs.keys():
 print('Re-Splitting...')
 Data = dict() 
 count = 0
-for mmsi in Vs.keys(): # 
+for mmsi in list(Vs.keys()): # 
     v = Vs[mmsi]
     # Split AIS track into small tracks whose duration <= 1 day
     idx = np.arange(0, len(v), 12*24)[1:]
@@ -233,7 +223,7 @@ for mmsi in Vs.keys(): #
 # Step 7: Normalisation 
 ###############################################################################
 print('Normalisation...')
-for k in Data.keys():
+for k in list(Data.keys()):
     v = Data[k]
     v[:,LAT] = (v[:,LAT] - LAT_MIN)/(LAT_MAX-LAT_MIN)
     v[:,LON] = (v[:,LON] - LON_MIN)/(LON_MAX-LON_MIN)
@@ -241,20 +231,23 @@ for k in Data.keys():
     v[:,SOG] = v[:,SOG]/SPEED_MAX
     v[:,COG] = v[:,COG]/360.0
 
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014/MarineC_Jan2014.pkl","wb") as f:
+dump_path = "MarineC/MarineC_Jan2014/"
+if not os.path.exists(dump_path):
+    os.makedirs(dump_path)
+with open(dump_path+"MarineC_Jan2014.pkl","wb") as f:
     pickle.dump(Data,f)
 
     
 ## Step 7bis: Density normalisation
 ##############################################################################
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014/MarineC_Jan2014.pkl","rb") as f:
+with open(dump_path + "MarineC_Jan2014.pkl","rb") as f:
     Vs = pickle.load(f)
 
 Tiles = dict()
 for d_i in range(10):
     for d_j in range(10):
         Tiles[str(d_i)+str(d_j)] = []   
-for key in Vs.keys():
+for key in list(Vs.keys()):
     m_V = Vs[key]
     lon_mean = np.mean(m_V[:,LON])
     lat_mean = np.mean(m_V[:,LAT])
@@ -268,7 +261,7 @@ v_density = np.empty((100,))
 for d_i in range(100):
     key = "{0:02d}".format(d_i)
     v_density[d_i] = len(Tiles[key])    
-plt.bar(range(100),v_density)
+plt.bar(list(range(100)),v_density)
 plt.xlabel("Tile (lat+lon)")
 plt.ylabel("Density (unnormalised)")
 plt.title("Dataset2")
@@ -286,7 +279,7 @@ print('Train-test splitting...')
 
 #Vs = Data
 v_all_idx = np.random.permutation(len(Vs))
-l_keys = Vs.keys()
+l_keys = list(Vs.keys())
 Vs_train = dict()
 Vs_valid = dict()
 Vs_test = dict()
@@ -300,9 +293,14 @@ for d_i in v_all_idx[int(len(Vs)*0.9):]:
     key = l_keys[d_i]
     Vs_test[key] = Vs[key]
     
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_train.pkl","wb") as f:
+
+dump_path_norm = "MarineC/MarineC_Jan2014_Norm/"
+if not os.path.exists(dump_path_norm):
+    os.makedirs(dump_path_norm)
+
+with open(dump_path_norm+"MarineC_Jan2014_Norm_train.pkl","wb") as f:
     pickle.dump(Vs_train,f)
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_valid.pkl","wb") as f:
+with open(dump_path_norm+"MarineC_Jan2014_Norm_valid.pkl","wb") as f:
     pickle.dump(Vs_valid,f)
-with open("/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_test.pkl","wb") as f:
+with open(dump_path_norm+"MarineC_Jan2014_Norm_test.pkl","wb") as f:
     pickle.dump(Vs_test,f)

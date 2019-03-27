@@ -19,7 +19,7 @@ geod = Geod(ellps='WGS84')
 AVG_EARTH_RADIUS = 6378.137  # in km
 SPEED_MAX = 30 # knot
 
-LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = range(9)
+LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = list(range(9))
 
 def trackOutlier(A):
     """
@@ -140,7 +140,7 @@ def createShapefile(shp_fname, Vs):
     shp.field('HEADING', 'N', 10,5)
     shp.field('ROT', 'N', 5)
     shp.field('NAV_STT', 'N', 2)
-    for mmsi in Vs.keys():
+    for mmsi in list(Vs.keys()):
         for p in Vs[mmsi]:
             shp.point(p[LON],p[LAT])
             shp.record(p[MMSI],
@@ -188,8 +188,10 @@ def interpolate(t, track):
             lon_interp, lat_interp, _ = geod.fwd(track[bpos,LON], track[bpos,LAT],
                                                az, dist_interp)
             speed_interp = (track[apos,SOG] - track[bpos,SOG])*(dt_interp/dt_full) + track[bpos,SOG]
-            course_interp = (track[apos,COG] - track[bpos,COG] )*(dt_interp/dt_full) + track[bpos,COG]
-            heading_interp = (track[apos,HEADING] - track[bpos,HEADING])*(dt_interp/dt_full) + track[bpos,HEADING]  
+            
+            course_interp = fmod((( fmod(((track[apos,COG] - track[bpos,COG])+180), 360) - 180 )*(dt_interp/dt_full) + track[bpos,COG] + 360), 360)
+            heading_interp = fmod((( fmod(((track[apos,HEADING] - track[bpos,HEADING])+180), 360) - 180 )*(dt_interp/dt_full) + track[bpos,HEADING] + 360), 360)
+            
             rot_interp = (track[apos,ROT] - track[bpos,ROT])*(dt_interp/dt_full) + track[bpos,ROT]
             if dt_interp > (dt_full/2):
                 nav_interp = track[apos,NAV_STT]

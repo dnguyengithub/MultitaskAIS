@@ -13,9 +13,9 @@
 # limitations under the License.
 # =============================================================================
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
+
+
 
 
 import os
@@ -84,7 +84,7 @@ def create_eval_graph(inputs, targets, lengths, model, config):
         cur_inputs, cur_mask = nested.read_tas([inputs_ta, mask_ta], t)
     
         if config.missing_data:
-            cur_inputs = tf.cond(tf.logical_and(t < max_seq_len - 6,t >= max_seq_len - 18),
+            cur_inputs = tf.cond(tf.logical_and(t < max_seq_len - 6,t >= max_seq_len - 18), # TODO make hold-out flexible
                                  lambda: while_samples, 
                                  lambda: cur_inputs)
     

@@ -9,9 +9,9 @@ Input pipelines script for Tensorflow graph
 """
 
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
+
+
 
 
 import numpy as np
@@ -23,7 +23,7 @@ import pickle
 import tensorflow as tf
 
 
-LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = range(9)
+LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = list(range(9))
 
 
 # The default number of threads used to process data in parallel.
@@ -68,16 +68,17 @@ def create_AIS_dataset(dataset_path,
     
     
     # Load the data from disk.
-    with tf.gfile.Open(dataset_path, "r") as f:
-        raw_data = pickle.load(f)
+    with tf.gfile.Open(dataset_path, "rb") as f:
+        raw_data = pickle.load(f, encoding='latin1')
         
     num_examples = len(raw_data)
     dirname = os.path.dirname(dataset_path)
-    with open(dirname + "/mean.pkl","r") as f:
-        mean = pickle.load(f)
+    with open(dirname + "/mean.pkl","rb") as f:
+        mean = pickle.load(f, encoding = 'latin1')
+        
 
     def aistrack_generator():
-        for k in raw_data.keys():
+        for k in list(raw_data.keys()):
             tmp = raw_data[k][::2,[LAT,LON,SOG,COG]] # 10 min
             tmp[tmp == 1] = 0.99999
             yield tmp, len(tmp), raw_data[k][0,MMSI] 

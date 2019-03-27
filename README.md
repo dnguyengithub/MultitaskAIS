@@ -51,6 +51,8 @@ Converting to csv:
 
 Preprocessing steps: the data then processed as discribed in the paper by `dataset_preprocessing.py`
 
+Run `calculate_AIS_mean.py` to create `mean.pkl` file.
+
 ### Training the Embedding layer
 
 First we must train the Embedding layer:
@@ -65,7 +67,23 @@ python multitaskAIS.py \
   --num_samples=16 \
   --learning_rate=0.0003 \
 ```
-
+MarineC dataset
+```
+python multitaskAIS.py \
+  --mode=train \
+  --logdir=./chkpt \
+  --bound=elbo \
+  --summarize_every=100 \
+  --latent_size=400 \
+  --batch_size=50 \
+  --num_samples=16 \
+  --learning_rate=0.0003 \
+  --dataset="MarineC" \
+  --trainingset_name=MarineC_Jan2014_Norm_train.pkl \
+  --testset_name=MarineC_Jan2014_Norm_valid.pkl \
+  --lat_bins=350 \
+  --lon_bins=1050
+```
 ### Running task-specific submodels
 
 After the Embedding layer is trained, we can run task-specific blocks.
@@ -117,7 +135,22 @@ python multitaskAIS.py \
   --batch_size=1 \
   --num_samples=16 \
 ``` 
-
+MarineC dataset:
+```
+python multitaskAIS.py \
+  --mode=traj_reconstruction \
+  --logdir=./chkpt \
+  --bound=elbo \
+  --latent_size=400 \
+  --batch_size=1 \
+  --num_samples=16 \
+  --learning_rate=0.0003 \
+  --dataset="MarineC" \
+  --trainingset_name=MarineC_Jan2014_Norm_train.pkl \
+  --testset_name=MarineC_Jan2014_Norm_test.pkl \
+  --lat_bins=350 \
+  --lon_bins=1050
+```
 
 ### Acknowledgement
 

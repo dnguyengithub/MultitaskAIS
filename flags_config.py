@@ -13,27 +13,16 @@
 # limitations under the License.
 # =============================================================================
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
+
+
 
 import os
 import tensorflow as tf
 import pickle
 
-### Bretagne
-LAT_MIN = 47.0
-LAT_MAX = 50.0
-LON_MIN = -7.0
-LON_MAX = -4.0
 
-
-## Gulf of Mexico
-#LAT_MIN = 26.5
-#LAT_MAX = 30.0
-#LON_MIN = -97.5
-#LON_MAX = -87
-#SPEED_MAX = 30.0  # knots
+SPEED_MAX = 30.0  # knots
 FIG_DPI = 300
 
 
@@ -144,11 +133,28 @@ config.data_dim  = config.lat_bins + config.lon_bins\
 #else:
 #    raise ValueError("Unkown dataset (must be 'Brittany' or 'MarineC'.")
 
+
+
+
+
 ### Other PCs  
 if config.dataset == "Brittany":
-    config.dataset_path = "/homes/vnguye04/Bureau/Sanssauvegarde/Datasets/mt314/"
+    #config.dataset_path = "/homes/vnguye04/Bureau/Sanssauvegarde/Datasets/mt314/"
+    config.dataset_path = "data/"
+    ### Bretagne
+    LAT_MIN = 47.0
+    LAT_MAX = 50.0
+    LON_MIN = -7.0
+    LON_MAX = -4.0
+
 elif config.dataset == "MarineC":
-    config.dataset_path = "/homes/vnguye04/Bureau/Sanssauvegarde/Datasets/MarineC/"
+    config.dataset_path = "data/MarineC/MarineC_Jan2014_Norm/"
+    ## Gulf of Mexico
+    LAT_MIN = 26.5
+    LAT_MAX = 30.0
+    LON_MIN = -97.5
+    LON_MAX = -87
+    config.trainingset_name
 else:
     raise ValueError("Unkown dataset (must be 'Brittany' or 'MarineC'.")
    

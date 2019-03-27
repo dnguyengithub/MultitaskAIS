@@ -19,9 +19,9 @@ The code is adapted from
 https://github.com/tensorflow/models/tree/master/research/fivo 
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
+
+
 
 import os
 import tensorflow as tf
@@ -58,7 +58,7 @@ if config.mode == "train":
 ###############################################################################
 else:
     with open(config.testset_path,"rb") as f:
-        Vs_test = pickle.load(f)
+        Vs_test = pickle.load(f, encoding='latin1')
     dataset_size = len(Vs_test)
 
 
@@ -105,7 +105,7 @@ if config.mode == "save_outcomes":
     the test set.
     """
     l_dict = []
-    for d_i in tqdm(range(dataset_size)):
+    for d_i in tqdm(list(range(dataset_size))):
         D = dict()
         inp, tar, mmsi, log_weights_np, sample_np, true_np, ll_t =\
                  sess.run([inputs, targets, mmsis, log_weights, track_sample, track_true, ll_per_t])
@@ -238,9 +238,9 @@ elif config.mode == "visualisation":
     print("Plotting tracks in the training set...")
     plt.figure(figsize=(1440*2/FIG_DPI, 480*2/FIG_DPI), dpi=FIG_DPI)  
 #    cmap = plt.cm.get_cmap('Blues')
-    l_keys = Vs_train.keys()
+    l_keys = list(Vs_train.keys())
     N = len(Vs_train)
-    for d_i in tqdm(range(N)):
+    for d_i in tqdm(list(range(N))):
         key = l_keys[d_i]
 #        c = cmap(float(d_i)/(N-1))
         tmp = Vs_train[key]
@@ -326,7 +326,7 @@ elif config.mode == "traj_reconstruction":
         os.makedirs(save_dir)
 
     print("Reconstructing AIS tracks...")
-    for d_i in tqdm(range(dataset_size)):
+    for d_i in tqdm(list(range(dataset_size))):
         tar, mmsi, dense_sample, ll_t, ll_tracks\
                             = sess.run([targets, mmsis, track_sample, ll_per_t, ll_acc])
         if len(tar) < config.min_duration:
@@ -339,20 +339,20 @@ elif config.mode == "traj_reconstruction":
             plt.figure()
             plt.subplot(2,1,1)
             plt.plot(sparse_tar[:,1],sparse_tar[:,0],'bo')
-            plt.plot(sparse_tar[-18:-6,1],sparse_tar[-18:-6,0],'ro')
+            plt.plot(sparse_tar[-18:-6,1],sparse_tar[-18:-6,0],'ro') # TODO make hold-out flexible
             plt.plot(sparse_tar[0,1],sparse_tar[0,0],'go')
             plt.ylim([0,config.lat_bins])
             plt.xlim([config.lat_bins,config.lat_bins+config.lon_bins])
             # Zoom-in
             plt.subplot(2,1,2)
             plt.plot(sparse_tar[:,1],sparse_tar[:,0],'bo')
-            plt.plot(sparse_tar[-18:-6,1],sparse_tar[-18:-6,0],'ro')
+            plt.plot(sparse_tar[-18:-6,1],sparse_tar[-18:-6,0],'ro') # TODO make hold-out flexible
             plt.plot(sparse_tar[0,1],sparse_tar[0,0],'go')
             ## Reconstructed positions
             logit_lat = np.argmax(dense_sample[:,d_i_sample,0:config.lat_bins], axis = 1)
             logit_lon = np.argmax(dense_sample[:,d_i_sample,config.lat_bins:config.lat_bins+config.lon_bins], axis = 1) + config.lat_bins
             plt.plot(logit_lon[1:],logit_lat[1:],'b')
-            plt.plot(logit_lon[-17:-5],logit_lat[-17:-5],'r')
+            plt.plot(logit_lon[-17:-5],logit_lat[-17:-5],'r') # TODO make hold-out flexible
             plt.xlim([np.min(sparse_tar[:,1]) - 5, np.max(sparse_tar[:,1]) + 5])
             plt.ylim([np.min(sparse_tar[:,0]) - 5, np.max(sparse_tar[:,0]) + 5])
             

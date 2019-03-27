@@ -1,0 +1,29 @@
+#####################################
+# Gulf of Mexico - Data Preprocessing
+#####################################
+
+# Download the zip files from Marine Cadastre site
+#   IMPORTANT NOTE:  This does NOT support months 
+#   October, November, December, 
+#   because for j>=10 the static 0 needs to be removed
+
+for j in {1..3}; do for i in {14..16}; do wget https://coast.noaa.gov/htdata/CMSP/AISDataHandler/2014/0${j}/Zone${i}_2014_0${j}.zip ; done; done
+
+
+# unzip
+for j in {1..3}; do for i in {14..16}; do unzip Zone${i}_2014_0${j}.zip ; done; done
+
+# Install ogr2ogr (which is part of part of GDAL): 
+sudo apt install gdal-bin
+
+
+# create .csv from .qdb
+#   -select "..." is not required but makes sure _Voyage and _Vessel are not converted, 
+#      and reduces the size of .csv because last features are not extracted.
+
+mkdir 2014 # check why ogr2ogr cannot create parent directory
+
+for j in {1..3}; do for i in {14..16}; do ogr2ogr -overwrite -progress -f csv "2014/0${j}/" "Zone${i}_2014_0${j}.gdb" -lco GEOMETRY=AS_XY -select "SOG,COG,Heading,ROT,BaseDateTime,Status,VoyageID,MMSI" ; done ; done
+
+# rename files (bash rename command can also be used)
+for j in {1..3}; do for i in {14..16}; do mv 2014/0${j}/Zone${i}_2014_0${j}_Broadcast.csv 2014/0${j}/Zone${i}_2014_0${j}.csv ; done ; done

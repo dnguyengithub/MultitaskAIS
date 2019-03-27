@@ -8,16 +8,16 @@ Created on Wed Feb 28 16:42:00 2018
 Calculate mean of AIS dataset
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+
+
+
 
 import numpy as np
 import pickle
 import os
 import sys
 sys.path.append("./data/")
-dataset_path = "/users/local/dnguyen/Datasets/AIS_datasets/MarineC/MarineC_Jan2014_norm/MarineC_Jan2014_norm_train.pkl"
+dataset_path = "MarineC/MarineC_Jan2014_Norm/MarineC_Jan2014_Norm_train.pkl"
 import tensorflow as tf
 
 #lat_bins = 300; lon_bins = 300; sog_bins = 30; cog_bins = 72
@@ -45,9 +45,10 @@ def sparse_AIS_to_dense(msgs_,num_timesteps, mmsis):
 
 dirname = os.path.dirname(dataset_path)
 
-LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = range(9)
+LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI = list(range(9))
 
-with tf.gfile.Open(dataset_path, "r") as f:
+
+with tf.gfile.Open(dataset_path, "rb") as f:
     Vs = pickle.load(f)
 
 
@@ -61,7 +62,7 @@ current_mean = np.zeros((0,data_dim))
 current_ais_msg = 0
 
 count = 0
-for mmsi in Vs.keys():
+for mmsi in list(Vs.keys()):
     count += 1
     print(count)
     tmp = Vs[mmsi][:,[LAT,LON,SOG,COG]]
