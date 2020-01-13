@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source /opt/conda/etc/profile.d/conda.sh
+conda activate SESAME_PY3CPU
+python online_detection.py

@@ -1,14 +1,13 @@
-ARG NAMESPACE
-ARG TARGET_REF
-FROM ${NAMESPACE}/base_python3.6:${TARGET_REF}
+FROM debian:stretch
 
 LABEL maintainer="matthieu.simonin@inria.fr"
+
+SHELL ["/bin/bash", "-c"]
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH /opt/conda/bin:$PATH
 
-RUN apt-get update --fix-missing && apt-get install -y wget bzip2 ca-certificates unzip
-
+RUN apt-get update --fix-missing && apt-get install -y wget bzip2 ca-certificates unzip g++
 
 ## Install miniconda
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.6.14-Linux-x86_64.sh -O ~/miniconda.sh && \
@@ -19,9 +18,9 @@ WORKDIR /opt/prog
 
 
 COPY . .
-COPY docker/. .
+COPY docker/base/. .
 
-RUN conda env create -f SESAME_PY3CPU.yml
+RUN conda env create -f docker/base/SESAME_PY3CPU.yml
 
 RUN cd chkpt && unzip *.zip
 RUN cd data && unzip *.zip
