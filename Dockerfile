@@ -26,8 +26,10 @@ RUN conda env create -f SESAME_PY3CPU.yml
 RUN cd chkpt && unzip *.zip
 RUN cd data && unzip *.zip
 ## Activate the env by default
+RUN conda init bash
+
 RUN ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate SESAME_PY3CPU" >> ~/.bashrc
 
-ENTRYPOINT ["/entrypoint.sh", "./main"]
+ENTRYPOINT ["./main"]
