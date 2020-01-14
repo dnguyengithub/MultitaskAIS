@@ -4,7 +4,7 @@ Online version of GeoTrackNet.
 The AIS track is a matrix, each row is an AIS message, in the following format:
 [LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI]
 
-HEADING, ROT and NAV_STT are not used at the moment. 
+HEADING, ROT and NAV_STT are not used at the moment.
 """
 
 import numpy as np
@@ -56,19 +56,19 @@ num_parallel_calls=DEFAULT_PARALLELISM
 #======================================
 
 def process_AIS_track(m_V):
-    """ 
+    """
     Preprocess the AIS track.
     See the comments in each steps for details.
-    
+
     ARGUMENTS:
         - m_V: a matrix, each row is an AIS message, in the following format:
                [LAT, LON, SOG, COG, HEADING, ROT, NAV_STT, TIMESTAMP, MMSI]
-               HEADING, ROT and NAV_STT are not used at the moment. 
-               
-        - Return:  
+               HEADING, ROT and NAV_STT are not used at the moment.
+
+        - Return:
         ## TODO: output's format.
     """
-    
+
     ## Remove erroneous timestamps and erroneous speeds
     if config.print_log:
         print(" Remove erroneous timestamps and erroneous speeds...")
@@ -90,12 +90,12 @@ def process_AIS_track(m_V):
     ## TODO: raise an error if len(m_V) == 0
     if config.print_log:
         print("m_V's shape: ",m_V.shape)
-    
-    
+
+
     ## Cutting discontiguous voyages into contiguous ones
     if config.print_log:
         print("Cutting discontiguous voyages into contiguous ones...")
-    
+
 
     # Intervals between successive messages in a track
     intervals = m_V[1:,TIMESTAMP] - m_V[:-1,TIMESTAMP]
@@ -104,7 +104,7 @@ def process_AIS_track(m_V):
     if len(idx) == 0:
         pass
     else:
-        m_V = np.split(v,idx+1)[0] # Use the first contiguous segment only 
+        m_V = np.split(v,idx+1)[0] # Use the first contiguous segment only
         ## TODO: use all the contiguous segments
     if config.print_log:
         print("m_V's shape: ",m_V.shape)
@@ -132,7 +132,7 @@ def process_AIS_track(m_V):
         ## TODO: raise an error
     if config.print_log:
         print("m_V's shape: ",m_V.shape)
-    
+
     ## Sampling, resolution = 5 min
     if config.print_log:
         print('Sampling...')
@@ -149,7 +149,7 @@ def process_AIS_track(m_V):
         m_V = sampling_track
     if config.print_log:
         print("m_V's shape: ",m_V.shape)
-    
+
     ## Removing 'low speed' tracks
     if config.print_log:
         print("Removing 'low speed' tracks...")
@@ -159,7 +159,7 @@ def process_AIS_track(m_V):
         ## TODO: raise an error
     if config.print_log:
         print("m_V's shape: ",m_V.shape)
-        
+
     if config.print_log:
         print('Re-Splitting...')
 
@@ -179,7 +179,7 @@ def process_AIS_track(m_V):
     m_V[:,COG] = m_V[:,COG]/360.0
     if config.print_log:
         print("m_V's shape: ",m_V.shape)
-    
+
     return m_V
 
 
@@ -213,7 +213,7 @@ def create_AIS_dataset(l_V):
                                                 cog_bins = config.cog_bins))
         dense_msgs = np.array(dense_msgs)
         return dense_msgs, num_timesteps, mmsis
-    
+
     with open("./data/ct_2017010203_10_20/mean.pkl","rb") as f:
         mean = pickle.load(f)
     def aistrack_generator():
@@ -221,7 +221,7 @@ def create_AIS_dataset(l_V):
             tmp = m_V[::2,[LAT,LON,SOG,COG]] # 10 min
             tmp[tmp == 1] = 0.99999
             yield tmp, len(tmp), m_V[0,MMSI]
-            
+
     dataset = tf.data.Dataset.from_generator(
                                   aistrack_generator,
                                   output_types=(tf.float64, tf.int64, tf.int64))
@@ -230,7 +230,7 @@ def create_AIS_dataset(l_V):
                                                    [msg_, num_timesteps, mmsis],
                                                    [tf.float64, tf.int64, tf.int64])),
                                                 num_parallel_calls=num_parallel_calls)
-    
+
     # Batch sequences togther, padding them to a common length in time.
     dataset = dataset.padded_batch(config.batch_size,
                                  padded_shapes=([None, 602], [], []))
@@ -304,12 +304,12 @@ def build_and_load_GeoTrackNet(l_V):
     ## Create the graph
     track_sample, track_true, log_weights, ll_per_t, ll_acc,_,_,_ =\
                              runners.create_eval_graph(inputs, targets, lengths, model, config)
-                                                               
+
     ## Reload the model
     saver = tf.train.Saver()
     sess = tf.train.SingularMonitoredSession()
     runners.wait_for_checkpoint(saver, sess, config.logdir)
-    
+
     return sess, inputs, targets, lengths, mmsis, mean, log_weights, ll_per_t
 
 
@@ -321,7 +321,7 @@ if __name__ == '__main__':
     ## Load AIS tracks
     m_V1 = np.load(config.contrario_data_path)
     m_V2 = np.load("AIS_track2.npy")
-    
+
     ## Process AIS tracks
     l_V = list([m_V1,m_V2])
     for idx in range(len(l_V)):
@@ -331,7 +331,7 @@ if __name__ == '__main__':
     ## Reset the computational graph.
     tf.Graph().as_default()
     global_step = tf.train.get_or_create_global_step()
-    
+
     ## Build and load the model
     sess, inputs, targets, lengths, mmsis, mean, log_weights, ll_per_t = build_and_load_GeoTrackNet(l_V)
 
@@ -348,15 +348,22 @@ if __name__ == '__main__':
                 + "missing_data-" + str(config.missing_data)\
                 + "-step-"+str(step)\
                 +"/"
+<<<<<<< HEAD
 #     m_map_ll_mean = np.load(save_dir+"map_ll_mean-"+str(LAT_RESO)+"-"+str(LON_RESO) + ".npy")
 #     m_map_ll_std = np.load(save_dir+"map_ll_std-"+str(LAT_RESO)+"-"+str(LON_RESO) + ".npy")
+=======
+
+    # NOTE(msimonin): DEAD CODE
+    # m_map_ll_mean = np.load(save_dir+"map_ll_mean-"+str(LAT_RESO)+"-"+str(LON_RESO) + ".npy")
+    # m_map_ll_std = np.load(save_dir+"map_ll_std-"+str(LAT_RESO)+"-"+str(LON_RESO) + ".npy")
+>>>>>>> 01ae7d8084366a5fc8b03c0499f06f579c62a890
     with open(save_dir+"map_ll-"+str(LAT_RESO)+"-"+str(LON_RESO)+".pkl","rb") as f:
         Map_ll = pickle.load(f)
 
     ## Calculate the log_prob of the track
     inp, tar, seq_len, mmsi, log_weights_np, ll_t =\
                 sess.run([inputs, targets, lengths, mmsis, log_weights, ll_per_t])
-    
+
     l_abnormal_track = []
     for idx_inbatch in range(tar.shape[1]):
         seq_len_d = seq_len[idx_inbatch]
@@ -372,7 +379,7 @@ if __name__ == '__main__':
             ## KDE
             # Use KDE to estimate the distribution of log[p(x_t|h_t)] in each cell.
             l_local_log_prod = Map_ll[str(d_row)+","+str(d_col)]
-            if len(l_local_log_prod) < 2: 
+            if len(l_local_log_prod) < 2:
                 # Ignore cells that do not have enough data.
                 v_A[d_timestep] = 2
             else:
@@ -380,7 +387,7 @@ if __name__ == '__main__':
                 cdf = kernel.integrate_box_1d(-np.inf,d_ll_t)
                 if cdf < 0.1:
                     v_A[d_timestep] = 1
-        # log[p(x_t|h_t)] of the first timesteps of the tracks may not robust, 
+        # log[p(x_t|h_t)] of the first timesteps of the tracks may not robust,
         # because h_t was initialized as a zeros.
         v_A = v_A[12:]
         v_anomalies = np.zeros(len(v_A))
@@ -393,7 +400,7 @@ if __name__ == '__main__':
             l_abnormal_track.append(mmsi[idx_inbatch])
         else:
             pass
-        
+
     print("Number of abnormal tracks: ",len(l_abnormal_track))
     print(l_abnormal_track)
 

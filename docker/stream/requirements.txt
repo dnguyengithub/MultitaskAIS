@@ -1,0 +1,2 @@
+faust ~= 1.9.0
+sesamelib >= 0.0.24
