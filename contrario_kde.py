@@ -84,12 +84,12 @@ save_dir = "./results/"+trainingset_name+"/log_density-"+trainingset_name+"_trai
 coastline_filename = "/homes/vnguye04/Bureau/Sanssauvegarde/Datasets/"\
                      + "coastlines-split-4326/streetmap_coastline_Bretagne.pkl"
 
-try:
-    with open(coastline_filename, 'rb') as f:
-        l_coastline_poly = pickle.load(f)
-except:
-    with open(coastline_filename, 'rb') as f:
-        l_coastline_poly = pickle.load(f, encoding='latin1')
+#try:
+#    with open(coastline_filename, 'rb') as f:
+#        l_coastline_poly = pickle.load(f)
+#except:
+#    with open(coastline_filename, 'rb') as f:
+#        l_coastline_poly = pickle.load(f, encoding='latin1')
 try:
     with open("./data/"+trainingset_name+"/"+trainingset_name+"_train.pkl","rb") as f:
         Vs_train = pickle.load(f)
@@ -252,9 +252,9 @@ plt.tight_layout()
 ## Loading coastline polygon.
 # For visualisation purpose, delete this part if you do not have the coastline
 # shapfile
-for point in l_coastline_poly:
-    poly = np.array(point)
-    plt.plot(poly[:,0],poly[:,1],color="k",linewidth=0.8)
+#for point in l_coastline_poly:
+#    poly = np.array(point)
+#    plt.plot(poly[:,0],poly[:,1],color="k",linewidth=0.8)
 
 cmap_anomaly = plt.cm.get_cmap('autumn')
 N_anomaly = len(l_dict_anomaly)
