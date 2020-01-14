@@ -105,9 +105,9 @@ except:
     with open("./data/"+testset_name+"/"+testset_name+"_test.pkl","rb") as f:
         Vs_test = pickle.load(f, encoding='latin1')
 
-l_fishing = []
-for fishing_filename in l_fishing_filename:
-    l_fishing = np.append(l_fishing,np.load(fishing_filename))
+#l_fishing = []
+#for fishing_filename in l_fishing_filename:
+#    l_fishing = np.append(l_fishing,np.load(fishing_filename))
 #l_fishing = np.append(l_fishing,[227610980,228259000,227988000,227312180])
 
 
