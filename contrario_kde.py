@@ -115,8 +115,8 @@ except:
 #======================================
 ## Loading the parameters of the distribution in each cell (calculated by the
 # tracks in the validation set)
-m_map_ll_mean = np.load(save_dir+"map_ll_mean-"+str(LAT_RESO)+"-"+str(LON_RESO) + ".npy")
-m_map_ll_std = np.load(save_dir+"map_ll_std-"+str(LAT_RESO)+"-"+str(LON_RESO) + ".npy")
+#m_map_ll_mean = np.load(save_dir+"map_ll_mean-"+str(LAT_RESO)+"-"+str(LON_RESO) + ".npy")
+#m_map_ll_std = np.load(save_dir+"map_ll_std-"+str(LAT_RESO)+"-"+str(LON_RESO) + ".npy")
 with open(save_dir+"map_ll-"+str(LAT_RESO)+"-"+str(LON_RESO)+".pkl","rb") as f:
     Map_ll = pickle.load(f)
 
