@@ -129,7 +129,7 @@ if config.mode == "save_outcomes":
     Calculate and save log[p(x_t|h_t)] of each track in the test set.
     """
     l_dict = []
-    for d_i in tqdm(list(range(int(dataset_size/config.batch_size)))):
+    for d_i in tqdm(list(range(math.ceil(dataset_size/config.batch_size)))):
         inp, tar, seq_len, mmsi, log_weights_np, true_np, ll_t =\
                  sess.run([inputs, targets, lengths, mmsis, log_weights, track_true, ll_per_t])
         for d_idx_inbatch in range(inp.shape[1]):

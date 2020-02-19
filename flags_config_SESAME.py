@@ -149,7 +149,6 @@ tf.app.flags.DEFINE_boolean("stagger_workers", True,
 
 # Fix tf >=1.8.0 flags bug
 tf.app.flags.DEFINE_string('f', '', 'kernel')
-
 tf.app.flags.DEFINE_integer("data_dim", 0, "Data dimension")
 tf.app.flags.DEFINE_string('log_filename', '', 'Log filename')
 tf.app.flags.DEFINE_string('logdir_name', '', 'Log dir name')

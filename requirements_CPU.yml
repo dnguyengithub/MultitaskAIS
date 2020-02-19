@@ -145,7 +145,7 @@ dependencies:
   - sqlite=3.30.1=h7b6447c_0
   - tensorboard=1.12.2=py36he6710b0_0
   - tensorflow=1.12.0=mkl_py36h69b6ba0_0
-  - tensorflow-base=1.12.0=mkl_py36h3c3e929_0
+  - tensorflow-gpu=1.12.0=mkl_py36h3c3e929_0
   - tensorflow-probability=0.5.0=py36h1987d90_0
   - termcolor=1.1.0=py36_1
   - terminado=0.8.1=py36_1
