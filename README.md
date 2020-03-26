@@ -1,6 +1,6 @@
 # MultitaskAIS
 
-#### We moved!!!. Please see https://github.com/CIA-Oceanix/GeoTrackNet for the lastest verion.
+#### We have moved!!!. Check out https://github.com/CIA-Oceanix/GeoTrackNet for the lastest verion.
 
 
 
