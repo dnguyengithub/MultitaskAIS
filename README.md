@@ -1,5 +1,9 @@
 # MultitaskAIS
 
+#### We moved!!!. Please see https://github.com/CIA-Oceanix/GeoTrackNet for the lastest verion.
+
+
+
 TensorFlow implementation of the model proposed in "A Multi-Task Deep Learning Architecture for Maritime Surveillance Using AIS Data Streams" (https://ieeexplore.ieee.org/abstract/document/8631498) and "GeoTrackNet—A Maritime Anomaly Detector using Probabilistic Neural Network Representation of AIS Tracks and A Contrario Detection" (https://arxiv.org/abs/1912.00682).
 (GeoTrackNet is the anomaly detection module of MultitaskAIS).
 
